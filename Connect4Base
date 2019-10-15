@@ -1,0 +1,90 @@
+package connect4;
+
+import java.util.Scanner;
+
+public class Connect4Base {
+	private int numRows;
+	private int numCols;
+	private int adjustedNumRows;
+	private int adjustedNumCols;
+	private boolean runInDebugMode;
+
+	public Connect4Base() {
+		this.numRows = 0;
+		this.numCols = 0;
+		this.adjustedNumRows = 0;
+		this.adjustedNumCols = 0;
+		this.runInDebugMode = false;
+	}
+
+	public Connect4Base(boolean runInDebugMode, int numRows, int numCols, int adjustedNumRows, int adjustedNumCols) {
+		this.runInDebugMode = runInDebugMode;
+		this.numRows = numRows;
+		this.numCols = numCols;
+		this.adjustedNumRows = adjustedNumRows;
+		this.adjustedNumCols = adjustedNumCols;
+	}
+
+	public void setNumRows(int numRows) {
+		this.numRows = numRows;
+	}
+
+	public int getNumRows() {
+		return this.numRows;
+	}
+
+	public void setAdjustedNumRows(int adjustedNumRows) {
+		this.adjustedNumRows = adjustedNumRows;
+	}
+
+	public int getAdjustedNumRows() {
+		return this.adjustedNumRows;
+	}
+
+	public void setNumCols(int numCols) {
+		this.numCols = numCols;
+	}
+
+	public int getNumCols() {
+		return this.numCols;
+	}
+
+	public void setAdjustedNumCols(int adjustedNumCols) {
+		this.adjustedNumCols = adjustedNumCols;
+	}
+
+	public int getAdjustedNumCols() {
+		return this.adjustedNumCols;
+	}
+
+	public void setRunInDebugMode(boolean runInDebugMode) {
+		this.runInDebugMode = runInDebugMode;
+	}
+
+	public boolean getRunInDebugMode() {
+		return this.runInDebugMode;
+	}
+
+	public void PrintGameInfo() {
+		System.out.println("This is the Connect 4 game.");
+		System.out.println("To win the game you must have 4 Xs or Os either verticaly, horizontaly, or diagonaly.");
+		System.out.println();
+	}
+
+	public void RunGameInDebugMode() {
+		try {
+			System.out.print("Would you like to run the game in DEBUG mode (y/n)? ");
+			Scanner scan = new Scanner(System.in);
+			String debug = scan.nextLine();
+			if (debug.equalsIgnoreCase("y") || debug.equalsIgnoreCase("yes")) {
+				this.runInDebugMode = true;
+				System.out.print("Running Connect4 game in DEBUG mode.");
+				System.out.println();
+				System.out.println();
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+			System.out.println();
+		}
+	}
+}
