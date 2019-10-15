@@ -1,0 +1,254 @@
+package connect4;
+
+import java.util.Scanner;
+
+public class Connect4Engine extends Connect4Base {
+	public Connect4Engine(int numRows, int numCols, int adjustedNumRows, int adjustedNumCols) {
+		setNumRows(numRows);
+		setNumCols(numCols);
+		setAdjustedNumRows(adjustedNumRows);
+		setAdjustedNumCols(adjustedNumCols);
+	}
+
+	// of a specific column have a Red
+	public boolean PlayerTurn(boolean player1, String[][] uiPattern) {
+		Scanner scan = null;
+		boolean success = true;
+
+		try {
+			if (player1)
+				System.out.println("Player 1, please select a column between 1 and 7: ");
+			else
+				System.out.println("Player 2, please select a column between 1 and 7: ");
+
+			scan = new Scanner(System.in);
+			int bucket = scan.nextInt();
+			if (bucket < 1 || bucket > 7)
+				throw new Exception("Invalid bucket selection.");
+
+			// convert the number from the user to
+			// the correct place in the matrix.
+			bucket = ((bucket - 1) * 2) + 1;
+
+			// we need to find an empty space for that
+			// column. So we have to go on every row
+			// to find it.
+			for (int idx = 5; idx >= 0; idx--) {
+				if (uiPattern[idx][bucket].equals(" ")) {
+					if (player1)
+						uiPattern[idx][bucket] = "X";
+					else
+						uiPattern[idx][bucket] = "O";
+					break;
+				}
+			}
+		} catch (Exception ex) {
+			success = false;
+			System.out.print(ex.getMessage());
+			System.out.println();
+		} finally {
+			// *** no need to close the scanner here
+			// *** because we are using the System.in
+			// *** to open it.
+			// *** closing it will cause a null exception.
+			// if (scan != null)
+			// scan.close();
+			if (getRunInDebugMode()) {
+				System.out.print("Function PlayerTurn");
+				System.out.println();
+			}
+		}
+
+		return success;
+	}
+
+	public String CheckForWinnerOrDraw(String[][] uiPattern) {
+		String result = "NoWinner";
+
+		try {
+			result = CheckForHorizontalWinner(uiPattern);
+			if (result.equalsIgnoreCase("NoWinner"))
+				result = CheckForVerticalWinner(uiPattern);
+
+			if (result.equalsIgnoreCase("NoWinner"))
+				result = CheckForLeftRightDiagonalWinner(uiPattern);
+
+			if (result.equalsIgnoreCase("NoWinner"))
+				result = CheckForRightLeftDiagonalWinner(uiPattern);
+
+			if (result.equalsIgnoreCase("NoWinner"))
+				result = CheckForDraw(uiPattern);
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+			System.out.println();
+		} finally {
+			if (getRunInDebugMode()) {
+				System.out.print("Function CheckForWinnerOrDraw, return value: " + result);
+				System.out.println();
+			}
+		}
+
+		return result;
+	}
+
+	private String CheckForVerticalWinner(String[][] uiPattern) {
+		String result = "NoWinner";
+
+		try {
+			// traverse the matrix looking for
+			// a vertical winner
+			for (int col = 1; col < 15; col += 2) {
+				// check for blanks first.
+				for (int row = 0; row < 3; row++) {
+					// check to see if we have 4 in a row with the same
+					// value.
+					if ((uiPattern[row][col] != " ") && (uiPattern[row + 1][col] != " ")
+							&& (uiPattern[row + 2][col] != " ") && (uiPattern[row + 3][col] != " ")) {
+						if ((uiPattern[row][col] == uiPattern[row + 1][col])
+								&& (uiPattern[row + 1][col] == uiPattern[row + 2][col])
+								&& (uiPattern[row + 2][col] == uiPattern[row + 3][col])) {
+							result = uiPattern[row][col];
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+			System.out.println();
+		} finally {
+			if (getRunInDebugMode()) {
+				System.out.print("Function CheckForVerticalWinner, return value: " + result);
+				System.out.println();
+			}
+		}
+
+		return result;
+	}
+
+	private String CheckForHorizontalWinner(String[][] uiPattern) {
+		String result = "NoWinner";
+
+		try {
+			// traverse the matrix looking for
+			// a horizontal winner
+			for (int row = 0; row < 6; row++) {
+				for (int col = 0; col < 7; col += 2) {
+					// check for blank first
+					if ((uiPattern[row][col + 1] != " ") && (uiPattern[row][col + 3] != " ")
+							&& (uiPattern[row][col + 5] != " ") && (uiPattern[row][col + 7] != " ")) {
+						// check to see if we have 4 in a row with the same
+						// value.
+						if ((uiPattern[row][col + 1] == uiPattern[row][col + 3])
+								&& (uiPattern[row][col + 3] == uiPattern[row][col + 5])
+								&& (uiPattern[row][col + 5] == uiPattern[row][col + 7])) {
+							result = uiPattern[row][col + 1];
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+			System.out.println();
+		} finally {
+			if (getRunInDebugMode()) {
+				System.out.print("Function CheckForHorizontalWinner, return value: " + result);
+				System.out.println();
+			}
+		}
+
+		return result;
+	}
+
+	private String CheckForLeftRightDiagonalWinner(String[][] uiPattern) {
+		String result = "NoWinner";
+
+		try {
+			for (int row = 0; row < 3; row++) {
+				for (int col = 1; col < 9; col += 2) {
+					if ((uiPattern[row][col] != " ") && (uiPattern[row + 1][col + 2] != " ")
+							&& (uiPattern[row + 2][col + 4] != " ") && (uiPattern[row + 3][col + 6] != " ")) {
+						if ((uiPattern[row][col] == uiPattern[row + 1][col + 2])
+								&& (uiPattern[row + 1][col + 2] == uiPattern[row + 2][col + 4])
+								&& (uiPattern[row + 2][col + 4] == uiPattern[row + 3][col + 6])) {
+							result = uiPattern[row][col];
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+			System.out.println();
+		} finally {
+			if (getRunInDebugMode()) {
+				System.out.print("Function CheckForLeftRightDiagonalWinner, return value: " + result);
+				System.out.println();
+			}
+		}
+
+		return result;
+	}
+
+	private String CheckForRightLeftDiagonalWinner(String[][] uiPattern) {
+		String result = "NoWinner";
+
+		try {
+			for (int row = 0; row < 3; row++) {
+				for (int col = 7; col < 15; col += 2) {
+					if ((uiPattern[row][col] != " ") && (uiPattern[row + 1][col - 2] != " ")
+							&& (uiPattern[row + 2][col - 4] != " ") && (uiPattern[row + 3][col - 6] != " ")) {
+						if ((uiPattern[row][col] == uiPattern[row + 1][col - 2])
+								&& (uiPattern[row + 1][col - 2] == uiPattern[row + 2][col - 4])
+								&& (uiPattern[row + 2][col - 4] == uiPattern[row + 3][col - 6])) {
+							result = uiPattern[row][col];
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+			System.out.println();
+		} finally {
+			if (getRunInDebugMode()) {
+				System.out.print("Function CheckForRightLeftDiagonalWinner, return value: " + result);
+				System.out.println();
+			}
+		}
+
+		return result;
+	}
+
+	private String CheckForDraw(String[][] uiPattern) {
+		String result = "DRAW";
+
+		try {
+			// traverse the matrix looking for
+			// a spaces winner
+			for (int row = 0; row < 6; row++) {
+				for (int col = 1; col < 15; col += 2) {
+					// if we found a space then
+					// set the result to blank
+					// and break out of the
+					// double loop
+					if (uiPattern[row][col] == " ") {
+						result = "NoWinner";
+						break;
+					}
+				}
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+			System.out.println();
+		} finally {
+			if (getRunInDebugMode()) {
+				System.out.print("Function CheckForDraw, return value: " + result);
+				System.out.println();
+			}
+		}
+
+		return result;
+	}
+}
