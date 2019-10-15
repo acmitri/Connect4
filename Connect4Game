@@ -1,0 +1,69 @@
+package connect4;
+
+public class Connect4Game {
+	// The easy part: using these methods
+	public static void main(String[] args) {
+		boolean keepPlaying = true;
+		boolean player1Turn = true;
+		Connect4UI UI = new Connect4UI(6, 7);
+		Connect4Engine engine = new Connect4Engine(UI.getNumRows(), UI.getNumCols(), UI.getAdjustedNumRows(),
+				UI.getAdjustedNumCols());
+
+		try {
+			// to better track down issues run the game in debug mode if needed.
+			UI.RunGameInDebugMode();
+			engine.setRunInDebugMode(UI.getRunInDebugMode());
+
+			// print the game info.
+			UI.PrintGameInfo();
+			// create the pattern in memory
+			String[][] uiPattern = UI.CreateEmptyConnect4UI();
+			// print the pattern to the screen
+			UI.ShowUIPattern(uiPattern);
+
+			while (keepPlaying) {
+				// we will start with player 1 and
+				// keep alternating till someone
+				// wins or the board is full.
+				if (player1Turn == true) {
+					boolean success = false;
+					while (success == false) {
+						success = engine.PlayerTurn(true, uiPattern);
+						if (success == false)
+							System.out.println("Please try again.");
+					}
+					player1Turn = false;
+				} else {
+					boolean success = false;
+					while (success == false) {
+						success = engine.PlayerTurn(false, uiPattern);
+						if (success == false)
+							System.out.println("Please try again.");
+					}
+
+					player1Turn = true;
+				}
+
+				UI.ShowUIPattern(uiPattern);
+
+				// check for winner or draw
+				String result = engine.CheckForWinnerOrDraw(uiPattern);
+				if (result.equalsIgnoreCase("NoWinner")) {
+					System.out.println("NO Winner yet.");
+					keepPlaying = true;
+				} else if (result.equalsIgnoreCase("X")) {
+					System.out.println(" Player 1 won the game.");
+					keepPlaying = false;
+				} else if (result.equalsIgnoreCase("O")) {
+					System.out.println(" Player 2 won the game.");
+					keepPlaying = false;
+				} else if (result.equalsIgnoreCase("DRAW")) {
+					System.out.println("It is a DRAW.");
+					keepPlaying = false;
+				}
+			}
+		} catch (Exception ex) {
+			System.out.println("An error has occured: " + ex.getMessage());
+		}
+	}
+}
