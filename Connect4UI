@@ -1,0 +1,61 @@
+package connect4;
+
+public class Connect4UI extends Connect4Base {
+	public Connect4UI(int numRows, int numCols) {
+		setNumRows(numRows);
+		setNumCols(numCols);
+	}
+
+	public String[][] CreateEmptyConnect4UI() {
+		String[][] ui = null;
+
+		try {
+			// even though the game is 6 rows and 7 columns
+			// for the UI to be drawn properly we need to
+			// num rows + 1 and num cols * 2 + 1.
+			// this way we can show the UI of the
+			// game in a more realistic way.
+			int adjustedNumRows = getNumRows() + 1;
+			int adjustedNumCols = (getNumCols() * 2) + 1;
+			setAdjustedNumRows(adjustedNumRows);
+			setAdjustedNumCols(adjustedNumCols);
+
+			ui = new String[adjustedNumRows][adjustedNumCols];
+
+			// loop over and save the UI
+			// pattern in the matrix in
+			// the rows and cols
+			for (int row = 0; row < ui.length; row++) {
+				for (int col = 0; col < ui[row].length; col++) {
+					// save the pattern
+					if (col % 2 == 0)
+						ui[row][col] = "|";
+					else
+						ui[row][col] = " ";
+
+					// save the bottom part
+					if (row == adjustedNumRows - 1)
+						ui[row][col] = "=";
+				}
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+		}
+
+		return ui;
+	}
+
+	public void ShowUIPattern(String[][] uiPattern) {
+		try {
+			for (int row = 0; row < uiPattern.length; row++) {
+				for (int col = 0; col < uiPattern[row].length; col++) {
+					System.out.print(uiPattern[row][col]);
+				}
+				System.out.println();
+			}
+		} catch (Exception ex) {
+			System.out.print(ex.getMessage());
+		}
+	}
+
+}
