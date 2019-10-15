@@ -1,0 +1,7 @@
+Connect 4 - Project for AP Computer Science A June 2019
+For my final project, I was tasked with making a game using Java. I decided to recreate Connect4 because I would play it 
+over iMessage with friends. The UI component draws up the grid and replaces a space with an "X" or an "O" and print it out
+to the console. The Engine component scanned for four of the same symbol in a row horizontally, vertically, and diagonally.
+The Engine is also responsible for alternating players. The game class keeps the game going by checking for winners every
+round and prints out the winner of the game. The base class establishes the number of rows and columns as well as prompts
+the user if they would like to use debug mode, which prints out the name of every method being used each turn.
